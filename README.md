@@ -7,7 +7,7 @@ Ended up being a fun look into how to navigate large collections with C# and LIN
 
 ## Instructions:
 
-  Compile, run and pick a word list upon startup. 
+  Compile (or get it from the [releases page](https://github.com/knwldg/HoneyBoozle/releases)!), run and pick a word list upon startup. 
   
   Any .txt file with words delimited by a newline will work, this means you can use languages other than English.
   
