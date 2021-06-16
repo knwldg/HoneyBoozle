@@ -29,13 +29,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.wordGridView = new System.Windows.Forms.DataGridView();
             this.Word = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.wordLengthBox = new System.Windows.Forms.TextBox();
+            this.charBox = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.knownPositionBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -44,22 +44,22 @@
             this.totalWordsLoaded = new System.Windows.Forms.Label();
             this.filteredWords = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.wordGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // wordGridView
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Word});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(296, 368);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.TabStop = false;
+            this.wordGridView.AllowUserToAddRows = false;
+            this.wordGridView.AllowUserToDeleteRows = false;
+            this.wordGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.wordGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Word});
+            this.wordGridView.Location = new System.Drawing.Point(12, 12);
+            this.wordGridView.Name = "wordGridView";
+            this.wordGridView.ReadOnly = true;
+            this.wordGridView.Size = new System.Drawing.Size(296, 368);
+            this.wordGridView.TabIndex = 0;
+            this.wordGridView.TabStop = false;
             // 
             // Word
             // 
@@ -76,21 +76,21 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Filter";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.FilterButton_Click);
             // 
-            // textBox1
+            // wordLengthBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(103, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(54, 20);
-            this.textBox1.TabIndex = 0;
+            this.wordLengthBox.Location = new System.Drawing.Point(103, 12);
+            this.wordLengthBox.Name = "wordLengthBox";
+            this.wordLengthBox.Size = new System.Drawing.Size(54, 20);
+            this.wordLengthBox.TabIndex = 0;
             // 
-            // textBox2
+            // charBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(103, 38);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(154, 20);
-            this.textBox2.TabIndex = 1;
+            this.charBox.Location = new System.Drawing.Point(103, 38);
+            this.charBox.Name = "charBox";
+            this.charBox.Size = new System.Drawing.Size(154, 20);
+            this.charBox.TabIndex = 1;
             // 
             // button2
             // 
@@ -100,14 +100,14 @@
             this.button2.TabIndex = 4;
             this.button2.Text = "Reset";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.ResetButton_Click);
             // 
-            // textBox3
+            // knownPositionBox
             // 
-            this.textBox3.Location = new System.Drawing.Point(103, 64);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(154, 20);
-            this.textBox3.TabIndex = 2;
+            this.knownPositionBox.Location = new System.Drawing.Point(103, 64);
+            this.knownPositionBox.Name = "knownPositionBox";
+            this.knownPositionBox.Size = new System.Drawing.Size(154, 20);
+            this.knownPositionBox.TabIndex = 2;
             // 
             // label1
             // 
@@ -151,15 +151,15 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.wordLengthBox);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.charBox);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.textBox3);
+            this.panel1.Controls.Add(this.knownPositionBox);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(358, 127);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(356, 131);
+            this.panel1.Size = new System.Drawing.Size(365, 131);
             this.panel1.TabIndex = 10;
             // 
             // totalWordsLoaded
@@ -198,10 +198,10 @@
             this.Controls.Add(this.filteredWords);
             this.Controls.Add(this.totalWordsLoaded);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.wordGridView);
             this.Name = "MainForm";
-            this.Text = "HoneyBoozle v1";
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridView1)).EndInit();
+            this.Text = "HoneyBoozle v1.1";
+            ((System.ComponentModel.ISupportInitialize) (this.wordGridView)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -220,15 +220,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
 
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox knownPositionBox;
 
         private System.Windows.Forms.Button button2;
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox wordLengthBox;
+        private System.Windows.Forms.TextBox charBox;
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView wordGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn Word;
 
         #endregion

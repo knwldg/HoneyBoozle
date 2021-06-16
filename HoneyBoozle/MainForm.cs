@@ -11,6 +11,26 @@ namespace HoneyBoozle
         private readonly ILookup<int, string> _wordsByLength;
         private IEnumerable<string> _filteredResults;
 
+        private static ILookup<int, string> LoadWords(string wordPath) =>
+            File.ReadAllLines(wordPath).ToLookup(x => x.Length, x => x);
+
+        private IEnumerable<string> FilterByLength(int length) => _wordsByLength[length];
+
+        private static IEnumerable<string> FilterByContainsAllChars(IEnumerable<string> words, char[] chars) =>
+            words.Where(x => chars.All(x.Contains));
+
+        private static IEnumerable<string> FilterByContainsSomeChars(IEnumerable<string> words, char[] chars) =>
+            words.Where(x => chars.Any(x.Contains));
+
+        private static IEnumerable<string> FilterByOnlyContainsLegal(IEnumerable<string> words, char[] chars) =>
+            words.Where(x => x.All(chars.Contains));
+
+        private static IEnumerable<string> FilterByContainsTooMany(IEnumerable<string> words, char[] chars) =>
+            words.Where(x => !chars.Any(c => x.Count(p => p == c) > chars.Count(z => z == c)));
+
+        private static IEnumerable<string> FilterByCharPosition(IEnumerable<string> words, int position, char c) =>
+            words.Where(x => x.Length >= position && x[position - 1] == c);
+
         public MainForm()
         {
             InitializeComponent();
@@ -35,60 +55,41 @@ namespace HoneyBoozle
             totalWordsLoaded.Text = $@"Words loaded: {_wordsByLength.Sum(x => x.Count()).ToString()}";
         }
 
-        private ILookup<int, string> LoadWords(string wordPath) =>
-            File.ReadAllLines(wordPath).ToLookup(x => x.Length, x => x);
-
-        private IEnumerable<string> FilterByLength(int length) => _wordsByLength[length];
-
-        private IEnumerable<string> FilterByContainsAllChars(IEnumerable<string> words, char[] chars) =>
-            words.Where(x => chars.All(x.Contains));
-
-        private IEnumerable<string> FilterByContainsSome(IEnumerable<string> words, char[] chars) =>
-            words.Where(x => chars.Any(x.Contains));
-
-        private IEnumerable<string> FilterByContainsIllegal(IEnumerable<string> words, char[] chars) =>
-            words.Where(x => x.All(chars.Contains));
-
-        private IEnumerable<string> FilterByContainsTooMany(IEnumerable<string> words, char[] chars) =>
-            words.Where(x => !chars.Any(c => chars.Count(z => z == c) < x.Count(p => p == c)));
-
-        private IEnumerable<string> FilterByCharPosition(IEnumerable<string> words, int position, char c) =>
-            words.Where(x => x.Length >= position && x[position - 1] == c);
-
-        private void button1_Click(object sender, EventArgs e)
+        private void FilterButton_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
+            wordGridView.Rows.Clear();
 
-            var length = Convert.ToInt32(textBox1.Text);
-            var chars = textBox2.Text.ToCharArray();
+            var length = Convert.ToInt32(wordLengthBox.Text);
+            var chars = charBox.Text.ToCharArray();
 
             _filteredResults = FilterByLength(length);
+            _filteredResults = FilterByContainsTooMany(_filteredResults, chars);
+            _filteredResults = FilterByOnlyContainsLegal(_filteredResults, chars);
 
-            if (length >= chars.Length)
-                _filteredResults = FilterByContainsAllChars(_filteredResults, chars);
-            else
-            {
-                _filteredResults = FilterByContainsIllegal(_filteredResults, chars);
-                _filteredResults = FilterByContainsTooMany(_filteredResults, chars);
-                _filteredResults = FilterByContainsSome(_filteredResults, chars);
-            }
+            _filteredResults = length >= chars.Length
+                ? FilterByContainsAllChars(_filteredResults, chars)
+                : FilterByContainsSomeChars(_filteredResults, chars);
 
-            if (!string.IsNullOrWhiteSpace(textBox3.Text))
+            if (!string.IsNullOrWhiteSpace(knownPositionBox.Text))
             {
-                var pairs = textBox3.Text.Split(',');
+                var pairs = knownPositionBox.Text.Split(',');
                 foreach (var pair in pairs)
+                {
+                    var letter = pair[^1];
+                    var position = int.Parse(pair.Replace(letter, ' '));
                     _filteredResults =
-                        FilterByCharPosition(_filteredResults, (int) char.GetNumericValue(pair[0]), pair[1]);
+                        FilterByCharPosition(_filteredResults, position, letter);
+                }
             }
 
             var finalFiltered = _filteredResults.ToArray();
             filteredWords.Text = $@"Possible results: {finalFiltered.Length}";
-            foreach (var word in finalFiltered) dataGridView1.Rows.Add(word);
+            foreach (var word in finalFiltered) wordGridView.Rows.Add(word);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void ResetButton_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
+            wordGridView.Rows.Clear();
             _filteredResults = null;
             filteredWords.Text = @"Filtered words: 0";
         }
